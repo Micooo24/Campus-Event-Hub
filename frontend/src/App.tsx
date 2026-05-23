@@ -510,8 +510,12 @@ function App() {
       return
     }
     if (!planDraft.label.trim() || !planDraft.owner.trim()) {
+      setPlanError('Step label and role owner are required.')
       return
     }
+
+    const isNew = !planDraft.id
+    const pos = isNew ? getNextPosition() : { x: planDraft.position_x, y: planDraft.position_y }
 
     try {
       setIsPlanSaving(true)
@@ -526,8 +530,8 @@ function App() {
           label: planDraft.label.trim(),
           owner: planDraft.owner.trim(),
           status: planDraft.status,
-          position_x: planDraft.position_x,
-          position_y: planDraft.position_y,
+          position_x: pos.x,
+          position_y: pos.y,
         }),
       })
 
@@ -592,8 +596,8 @@ function App() {
       id: step.id,
       type: 'step',
       position: {
-        x: step.position_x || (index % 3) * 280,
-        y: step.position_y || Math.floor(index / 3) * 180,
+        x: step.position_x ?? (index % 3) * 280,
+        y: step.position_y ?? Math.floor(index / 3) * 180,
       },
       data: {
         label: step.label,
@@ -620,7 +624,34 @@ function App() {
   }, [selectedPlan?.edges])
 
   const [rfNodes, setRfNodes, onNodesChange] = useNodesState<Node<StepNodeData>>(flowNodes)
-  const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState(flowEdges)
+  const [rfEdges, setRfEdges, onEdgesChangeBase] = useEdgesState(flowEdges)
+
+  const onEdgesChange = useCallback(
+    (changes: import('@xyflow/react').EdgeChange[]) => {
+      const removals = changes.filter((c) => c.type === 'remove')
+      if (removals.length > 0 && selectedEventId) {
+        for (const removal of removals) {
+          if (removal.type === 'remove') {
+            fetch(
+              `${API_BASE}/events/${selectedEventId}/plan/edges/${removal.id}`,
+              { method: 'DELETE' },
+            )
+              .then((res) => {
+                if (res.ok) return res.json()
+              })
+              .then((data) => {
+                if (data) {
+                  setEdgesByEvent((prev) => ({ ...prev, [selectedEventId]: data.edges ?? [] }))
+                }
+              })
+              .catch(() => {})
+          }
+        }
+      }
+      onEdgesChangeBase(changes)
+    },
+    [onEdgesChangeBase, selectedEventId],
+  )
 
   useEffect(() => {
     setRfNodes(flowNodes)
@@ -633,6 +664,11 @@ function App() {
   const onConnect = useCallback(
     async (connection: Connection) => {
       if (!selectedEventId || !connection.source || !connection.target) return
+      if (connection.source === connection.target) return
+      const alreadyExists = rfEdges.some(
+        (e) => e.source === connection.source && e.target === connection.target,
+      )
+      if (alreadyExists) return
       setRfEdges((eds) => addEdge({ ...connection, animated: true, style: { stroke: 'var(--accent)', strokeWidth: 2 }, markerEnd: { type: 'arrowclosed' as const, color: 'var(--accent)' } }, eds))
       try {
         const response = await fetch(
@@ -649,7 +685,7 @@ function App() {
         }
       } catch { /* edge will appear optimistically */ }
     },
-    [selectedEventId, setRfEdges],
+    [selectedEventId, setRfEdges, rfEdges],
   )
 
   const onNodeDragStop = useCallback(
@@ -678,13 +714,18 @@ function App() {
     [selectedEventId],
   )
 
-  const handleAddStepToCanvas = () => {
+  const getNextPosition = () => {
     const count = flowSteps.length
-    setPlanDraft((prev) => ({
-      ...prev,
-      position_x: (count % 3) * 280,
-      position_y: Math.floor(count / 3) * 180,
-    }))
+    const occupied = new Set(flowSteps.map((s) => `${Math.round(s.position_x)},${Math.round(s.position_y)}`))
+    let x = (count % 3) * 280
+    let y = Math.floor(count / 3) * 180
+    let attempts = 0
+    while (occupied.has(`${x},${y}`) && attempts < 20) {
+      attempts++
+      x = ((count + attempts) % 3) * 280
+      y = Math.floor((count + attempts) / 3) * 180
+    }
+    return { x, y }
   }
 
   const handleChatSend = async (question: string) => {
@@ -1434,10 +1475,7 @@ function App() {
                   <div className="form-actions">
                     <button
                       type="button"
-                      onClick={() => {
-                        handleAddStepToCanvas()
-                        handlePlanSubmit()
-                      }}
+                      onClick={handlePlanSubmit}
                       disabled={isPlanSaving}
                     >
                       {isPlanSaving

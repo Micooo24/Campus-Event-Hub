@@ -29,37 +29,206 @@ app.add_middleware(
 EVENTS: List[Dict] = [
     {
         "id": 1,
-        "title": "Welcome Week Mixer",
-        "date": "2026-08-25 18:00",
-        "location": "Student Center Atrium",
+        "title": "Hackathon 2026",
+        "date": "2026-08-22 09:00",
+        "location": "CS Building Lab 301",
         "capacity": 120,
-        "registeredCount": 42,
-        "description": "Kick off the year with music, snacks, and club intros.",
+        "registeredCount": 96,
+        "description": "24-hour coding marathon where teams build MVPs to solve real-world problems using any tech stack.",
     },
     {
         "id": 2,
-        "title": "Product Design Sprint",
-        "date": "2026-09-03 15:00",
-        "location": "Innovation Lab 2A",
-        "capacity": 60,
-        "registeredCount": 18,
-        "description": "Rapid ideation and prototyping for campus problems.",
+        "title": "TechTalks: AI & Cloud",
+        "date": "2026-09-05 14:00",
+        "location": "Auditorium B",
+        "capacity": 200,
+        "registeredCount": 142,
+        "description": "Industry speakers share insights on AI engineering, cloud architecture, and DevOps careers.",
     },
     {
         "id": 3,
-        "title": "Leadership Fireside",
-        "date": "2026-09-10 19:00",
-        "location": "Library Auditorium",
-        "capacity": 200,
-        "registeredCount": 95,
-        "description": "Hear from alumni leaders and meet the exec board.",
+        "title": "Cybersecurity CTF",
+        "date": "2026-09-12 10:00",
+        "location": "Networking Lab 2F",
+        "capacity": 80,
+        "registeredCount": 64,
+        "description": "Capture-the-flag competition covering web exploits, cryptography, and forensics challenges.",
+    },
+    {
+        "id": 4,
+        "title": "UI/UX Design Jam",
+        "date": "2026-09-19 13:00",
+        "location": "Multimedia Room 4A",
+        "capacity": 60,
+        "registeredCount": 38,
+        "description": "Rapid design sprint where teams prototype mobile app interfaces and present to a panel of UX mentors.",
+    },
+    {
+        "id": 5,
+        "title": "DevOps Workshop Series",
+        "date": "2026-10-03 15:00",
+        "location": "Server Room Annex",
+        "capacity": 40,
+        "registeredCount": 28,
+        "description": "Hands-on labs covering Docker, CI/CD pipelines, Kubernetes basics, and cloud deployment.",
+    },
+    {
+        "id": 6,
+        "title": "Tech Career Expo",
+        "date": "2026-10-15 10:00",
+        "location": "Main Hall Lobby",
+        "capacity": 300,
+        "registeredCount": 185,
+        "description": "Connect with IT companies, attend resume reviews, and join mock technical interview booths.",
     },
 ]
 
 REGISTRATIONS: List[Dict] = []
 ATTENDANCE: Dict[int, Set[str]] = {}
-EVENT_PLANS: Dict[int, List[Dict]] = {}
-EVENT_PLAN_EDGES: Dict[int, List[Dict]] = {}
+EVENT_PLANS: Dict[int, List[Dict]] = {
+    # 1 — Hackathon 2026
+    1: [
+        {"id": "hk-1", "label": "Define theme & rules", "owner": "Tech org president", "status": "done", "position_x": 280, "position_y": 0},
+        {"id": "hk-2", "label": "Book lab & power strips", "owner": "Facilities officer", "status": "done", "position_x": 0, "position_y": 160},
+        {"id": "hk-3", "label": "Recruit industry judges", "owner": "Industry liaison", "status": "done", "position_x": 280, "position_y": 160},
+        {"id": "hk-4", "label": "Open team registration", "owner": "Membership head", "status": "done", "position_x": 560, "position_y": 160},
+        {"id": "hk-5", "label": "Set up GitHub repos & Wi-Fi", "owner": "Infra lead", "status": "in-progress", "position_x": 0, "position_y": 320},
+        {"id": "hk-6", "label": "Prepare food & energy packs", "owner": "Logistics head", "status": "in-progress", "position_x": 280, "position_y": 320},
+        {"id": "hk-7", "label": "Mentor matching", "owner": "Academics officer", "status": "in-progress", "position_x": 560, "position_y": 320},
+        {"id": "hk-8", "label": "Run 24-hr hacking sprint", "owner": "Event manager", "status": "todo", "position_x": 140, "position_y": 480},
+        {"id": "hk-9", "label": "Demo day & awarding", "owner": "Judges panel", "status": "todo", "position_x": 420, "position_y": 480},
+    ],
+    # 2 — TechTalks: AI & Cloud
+    2: [
+        {"id": "tt-1", "label": "Invite speaker lineup", "owner": "VP external", "status": "done", "position_x": 250, "position_y": 0},
+        {"id": "tt-2", "label": "Book auditorium & AV", "owner": "Logistics officer", "status": "done", "position_x": 0, "position_y": 160},
+        {"id": "tt-3", "label": "Create event poster", "owner": "Creative director", "status": "done", "position_x": 500, "position_y": 160},
+        {"id": "tt-4", "label": "Open RSVP form", "owner": "Membership head", "status": "done", "position_x": 250, "position_y": 160},
+        {"id": "tt-5", "label": "Promote on socials & LMS", "owner": "Marketing head", "status": "in-progress", "position_x": 0, "position_y": 320},
+        {"id": "tt-6", "label": "Prepare speaker kits", "owner": "VP external", "status": "in-progress", "position_x": 500, "position_y": 320},
+        {"id": "tt-7", "label": "Dry run AV & livestream", "owner": "Tech team lead", "status": "todo", "position_x": 125, "position_y": 480},
+        {"id": "tt-8", "label": "Host TechTalks event", "owner": "Emcee / moderator", "status": "todo", "position_x": 375, "position_y": 480},
+    ],
+    # 3 — Cybersecurity CTF
+    3: [
+        {"id": "ctf-1", "label": "Design CTF challenges", "owner": "Security club lead", "status": "done", "position_x": 250, "position_y": 0},
+        {"id": "ctf-2", "label": "Set up CTFd platform", "owner": "Infra lead", "status": "done", "position_x": 0, "position_y": 160},
+        {"id": "ctf-3", "label": "Recruit challenge testers", "owner": "QA volunteer", "status": "done", "position_x": 500, "position_y": 160},
+        {"id": "ctf-4", "label": "Open player registration", "owner": "Membership head", "status": "in-progress", "position_x": 250, "position_y": 160},
+        {"id": "ctf-5", "label": "Prepare scoring & hints", "owner": "Challenge authors", "status": "in-progress", "position_x": 0, "position_y": 320},
+        {"id": "ctf-6", "label": "Configure network sandbox", "owner": "NetSec officer", "status": "in-progress", "position_x": 500, "position_y": 320},
+        {"id": "ctf-7", "label": "Run competition day", "owner": "Event manager", "status": "todo", "position_x": 125, "position_y": 480},
+        {"id": "ctf-8", "label": "Scoreboard reveal & prizes", "owner": "Security club lead", "status": "todo", "position_x": 375, "position_y": 480},
+    ],
+    # 4 — UI/UX Design Jam
+    4: [
+        {"id": "ux-1", "label": "Pick design brief & personas", "owner": "UX club president", "status": "done", "position_x": 280, "position_y": 0},
+        {"id": "ux-2", "label": "Recruit UX mentors", "owner": "VP external", "status": "done", "position_x": 0, "position_y": 160},
+        {"id": "ux-3", "label": "Set up Figma workspace", "owner": "Tech lead", "status": "done", "position_x": 560, "position_y": 160},
+        {"id": "ux-4", "label": "Open team sign-ups", "owner": "Membership head", "status": "in-progress", "position_x": 0, "position_y": 320},
+        {"id": "ux-5", "label": "Prepare evaluation rubric", "owner": "UX club president", "status": "in-progress", "position_x": 280, "position_y": 320},
+        {"id": "ux-6", "label": "Print feedback forms", "owner": "Secretary", "status": "todo", "position_x": 560, "position_y": 320},
+        {"id": "ux-7", "label": "Run design sprint day", "owner": "Facilitator", "status": "todo", "position_x": 140, "position_y": 480},
+        {"id": "ux-8", "label": "Pitch showcase & critique", "owner": "Mentor panel", "status": "todo", "position_x": 420, "position_y": 480},
+    ],
+    # 5 — DevOps Workshop Series
+    5: [
+        {"id": "dw-1", "label": "Outline workshop curriculum", "owner": "DevOps lead", "status": "done", "position_x": 250, "position_y": 0},
+        {"id": "dw-2", "label": "Provision cloud lab accounts", "owner": "Infra lead", "status": "done", "position_x": 0, "position_y": 160},
+        {"id": "dw-3", "label": "Prepare Docker lab exercises", "owner": "Workshop instructor", "status": "done", "position_x": 500, "position_y": 160},
+        {"id": "dw-4", "label": "Open attendee registration", "owner": "Membership head", "status": "in-progress", "position_x": 250, "position_y": 160},
+        {"id": "dw-5", "label": "Set up CI/CD demo pipeline", "owner": "DevOps lead", "status": "in-progress", "position_x": 0, "position_y": 320},
+        {"id": "dw-6", "label": "Create K8s sandbox cluster", "owner": "Infra lead", "status": "todo", "position_x": 500, "position_y": 320},
+        {"id": "dw-7", "label": "Run hands-on sessions", "owner": "Workshop instructor", "status": "todo", "position_x": 125, "position_y": 480},
+        {"id": "dw-8", "label": "Issue completion certificates", "owner": "Academics officer", "status": "todo", "position_x": 375, "position_y": 480},
+    ],
+    # 6 — Tech Career Expo
+    6: [
+        {"id": "ce-1", "label": "Reach out to tech companies", "owner": "Industry liaison", "status": "done", "position_x": 280, "position_y": 0},
+        {"id": "ce-2", "label": "Confirm booth reservations", "owner": "Logistics officer", "status": "done", "position_x": 0, "position_y": 160},
+        {"id": "ce-3", "label": "Promote via email & socials", "owner": "Marketing head", "status": "done", "position_x": 560, "position_y": 160},
+        {"id": "ce-4", "label": "Prepare resume review station", "owner": "Career adviser", "status": "in-progress", "position_x": 0, "position_y": 320},
+        {"id": "ce-5", "label": "Set up mock interview rooms", "owner": "HR volunteers", "status": "in-progress", "position_x": 280, "position_y": 320},
+        {"id": "ce-6", "label": "Print attendee badges", "owner": "Secretary", "status": "in-progress", "position_x": 560, "position_y": 320},
+        {"id": "ce-7", "label": "Run expo day", "owner": "Event manager", "status": "todo", "position_x": 140, "position_y": 480},
+        {"id": "ce-8", "label": "Follow-up & analytics report", "owner": "Industry liaison", "status": "todo", "position_x": 420, "position_y": 480},
+    ],
+}
+EVENT_PLAN_EDGES: Dict[int, List[Dict]] = {
+    # 1 — Hackathon 2026
+    1: [
+        {"id": "hke-1", "source": "hk-1", "target": "hk-2"},
+        {"id": "hke-2", "source": "hk-1", "target": "hk-3"},
+        {"id": "hke-3", "source": "hk-1", "target": "hk-4"},
+        {"id": "hke-4", "source": "hk-2", "target": "hk-5"},
+        {"id": "hke-5", "source": "hk-3", "target": "hk-7"},
+        {"id": "hke-6", "source": "hk-4", "target": "hk-6"},
+        {"id": "hke-7", "source": "hk-5", "target": "hk-8"},
+        {"id": "hke-8", "source": "hk-6", "target": "hk-8"},
+        {"id": "hke-9", "source": "hk-7", "target": "hk-8"},
+        {"id": "hke-10", "source": "hk-8", "target": "hk-9"},
+    ],
+    # 2 — TechTalks: AI & Cloud
+    2: [
+        {"id": "tte-1", "source": "tt-1", "target": "tt-2"},
+        {"id": "tte-2", "source": "tt-1", "target": "tt-3"},
+        {"id": "tte-3", "source": "tt-1", "target": "tt-4"},
+        {"id": "tte-4", "source": "tt-3", "target": "tt-5"},
+        {"id": "tte-5", "source": "tt-4", "target": "tt-5"},
+        {"id": "tte-6", "source": "tt-2", "target": "tt-6"},
+        {"id": "tte-7", "source": "tt-6", "target": "tt-7"},
+        {"id": "tte-8", "source": "tt-5", "target": "tt-8"},
+        {"id": "tte-9", "source": "tt-7", "target": "tt-8"},
+    ],
+    # 3 — Cybersecurity CTF
+    3: [
+        {"id": "ctfe-1", "source": "ctf-1", "target": "ctf-2"},
+        {"id": "ctfe-2", "source": "ctf-1", "target": "ctf-3"},
+        {"id": "ctfe-3", "source": "ctf-1", "target": "ctf-4"},
+        {"id": "ctfe-4", "source": "ctf-2", "target": "ctf-5"},
+        {"id": "ctfe-5", "source": "ctf-3", "target": "ctf-5"},
+        {"id": "ctfe-6", "source": "ctf-2", "target": "ctf-6"},
+        {"id": "ctfe-7", "source": "ctf-5", "target": "ctf-7"},
+        {"id": "ctfe-8", "source": "ctf-6", "target": "ctf-7"},
+        {"id": "ctfe-9", "source": "ctf-7", "target": "ctf-8"},
+    ],
+    # 4 — UI/UX Design Jam
+    4: [
+        {"id": "uxe-1", "source": "ux-1", "target": "ux-2"},
+        {"id": "uxe-2", "source": "ux-1", "target": "ux-3"},
+        {"id": "uxe-3", "source": "ux-2", "target": "ux-4"},
+        {"id": "uxe-4", "source": "ux-1", "target": "ux-5"},
+        {"id": "uxe-5", "source": "ux-3", "target": "ux-6"},
+        {"id": "uxe-6", "source": "ux-4", "target": "ux-7"},
+        {"id": "uxe-7", "source": "ux-5", "target": "ux-7"},
+        {"id": "uxe-8", "source": "ux-6", "target": "ux-8"},
+        {"id": "uxe-9", "source": "ux-7", "target": "ux-8"},
+    ],
+    # 5 — DevOps Workshop Series
+    5: [
+        {"id": "dwe-1", "source": "dw-1", "target": "dw-2"},
+        {"id": "dwe-2", "source": "dw-1", "target": "dw-3"},
+        {"id": "dwe-3", "source": "dw-1", "target": "dw-4"},
+        {"id": "dwe-4", "source": "dw-2", "target": "dw-5"},
+        {"id": "dwe-5", "source": "dw-3", "target": "dw-6"},
+        {"id": "dwe-6", "source": "dw-4", "target": "dw-5"},
+        {"id": "dwe-7", "source": "dw-5", "target": "dw-7"},
+        {"id": "dwe-8", "source": "dw-6", "target": "dw-7"},
+        {"id": "dwe-9", "source": "dw-7", "target": "dw-8"},
+    ],
+    # 6 — Tech Career Expo
+    6: [
+        {"id": "cee-1", "source": "ce-1", "target": "ce-2"},
+        {"id": "cee-2", "source": "ce-1", "target": "ce-3"},
+        {"id": "cee-3", "source": "ce-2", "target": "ce-4"},
+        {"id": "cee-4", "source": "ce-2", "target": "ce-5"},
+        {"id": "cee-5", "source": "ce-3", "target": "ce-6"},
+        {"id": "cee-6", "source": "ce-4", "target": "ce-7"},
+        {"id": "cee-7", "source": "ce-5", "target": "ce-7"},
+        {"id": "cee-8", "source": "ce-6", "target": "ce-7"},
+        {"id": "cee-9", "source": "ce-7", "target": "ce-8"},
+    ],
+}
 
 GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")
 GEMINI_MODEL = "gemini-2.5-flash"
