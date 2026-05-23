@@ -138,12 +138,12 @@ const getCurrentMonthKey = () => {
 }
 
 const FAQS = [
-  'What does this app do?',
-  'How do I create a new event?',
-  'Where can I assign roles and steps?',
-  'How does attendance tracking work?',
-  'Can I filter the schedule by month?',
-  'Is data saved permanently?',
+  'What can this app do?',
+  'How do I create a tech event?',
+  'How does the flowchart planner work?',
+  'What roles can I assign to steps?',
+  'How do I connect steps in the flow?',
+  'Can I track attendance and reports?',
 ]
 
 const STATUS_COLORS: Record<string, string> = {
@@ -228,7 +228,7 @@ function App() {
       id: crypto.randomUUID(),
       role: 'assistant',
       content:
-        'Hi! Ask me about this project or pick a question below to get started.',
+        'Hi! I can help you with event planning, flowcharts, and how this app works. Pick a question or ask your own!',
     },
   ])
   const [chatInput, setChatInput] = useState('')
@@ -771,7 +771,7 @@ function App() {
         id: crypto.randomUUID(),
         role: 'assistant',
         content:
-          'Hi! Ask me about this project or pick a question below to get started.',
+          'Hi! I can help you with event planning, flowcharts, and how this app works. Pick a question or ask your own!',
       },
     ])
     setChatInput('')
@@ -1306,9 +1306,9 @@ function App() {
               <div className="chat-panel">
                 <div className="chat-header">
                   <div>
-                    <h3>Project FAQ chatbot</h3>
+                    <h3>AI Assistant</h3>
                     <p className="muted small">
-                      Pick a question to learn how this app works.
+                      Ask about events, flowcharts, or how to use the platform.
                     </p>
                   </div>
                   <button
